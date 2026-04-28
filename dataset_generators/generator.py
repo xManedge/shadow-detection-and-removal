@@ -233,6 +233,10 @@ class Generator(Dataset):
         if self.transform_mask:
             mask = self.transform_mask(mask)
         
+        else:
+            to_tensor = T.ToTensor()
+            mask = to_tensor(mask)
+
         mask = mask.long()
 
         return img, mask, reconstructed

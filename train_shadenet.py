@@ -36,6 +36,7 @@ if __name__ == "__main__":
 
     transform_mask = T.Compose([
         T.Resize(t['mask_resize'], interpolation=T.InterpolationMode.NEAREST),
+        T.ToTensor(),
         ])
     
 

@@ -258,7 +258,7 @@ def train_shadenet(
     # ── Loss functions ─────────────────────────────────────────────────────
     cw = cw.to(device=device, dtype=torch.float32) if cw is not None else None
 
-    dice_criterion    = DiceLoss(average='micro', ignore_index=ignore_index, weight=cw)
+    dice_criterion = DiceLoss(average='micro', ignore_index=ignore_index, weight=cw)
     bceLoss_criterion = nn.BCEWithLogitsLoss(weight=cw)
     mse_criterion     = nn.MSELoss()
 
@@ -289,6 +289,7 @@ def train_shadenet(
         for batch_idx, data in enumerate(train_loader_tqdm):
             img    = data["Image"].to(device=device,  non_blocking=True)
             mask   = data["Mask"].to(device=device,   non_blocking=True)
+            mask = mask.squeeze(1)
             target = data["Target"].to(device=device, non_blocking=True)
 
             with torch.cuda.amp.autocast(enabled=use_amp):
