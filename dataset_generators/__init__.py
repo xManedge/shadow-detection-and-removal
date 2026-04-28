@@ -1,3 +1,3 @@
 from generator import Generator
 
-__all__ = [Generator]
+__all__ = ["Generator"]

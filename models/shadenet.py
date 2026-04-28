@@ -88,7 +88,7 @@ class ShadeNet(nn.Module):
     torch.Size([2, 3, 640, 480])
     """
 
-    def __init__(self, mid_layers, n_classes=1):
+    def __init__(self, mid_layers = [64, 128, 256, 512, 512], n_classes=1):
         """
         Initialise ShadeNet encoder, attention, decoder, and output heads.
 

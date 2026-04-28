@@ -1,3 +1,3 @@
 from .shadenet import ShadeNet
 
-__all__ = [ShadeNet]
+__all__ = ["ShadeNet"]

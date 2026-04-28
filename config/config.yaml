@@ -1,0 +1,40 @@
+# shadenet_config.yaml
+
+model:
+  mid_layers: [64, 128, 256, 512, 512]
+  n_classes: 1
+
+training:
+  epochs: 50
+  warmup_epochs: 5
+  lr: 7e-5
+  ignore_index: 255
+  dice_w: 0.8
+  mask_w: 0.5
+  mse_w: 1.0
+  accumulation_steps: 4
+  device: cuda
+  save_dir: ./models
+  config_path: ./shadenet_config.yaml
+  class_weights_path: null        # set to path if using, e.g. ./cw.pt
+
+traingenerator:
+  root: ./Dataset/ISTD_Dataset/train
+  augment: true
+
+valgenerator:
+  root: ./Dataset/ISTD_Dataset/test
+  augment:False
+  
+dataloader:
+  batch_size: 16
+  num_workers: 4
+  pin_memory: true
+  persistent_workers: true
+  prefetch_factor: 2
+  
+transforms:
+  img_mean: [0.485, 0.456, 0.406]
+  img_std: [0.229, 0.224, 0.225]
+  img_resize: [640, 480]
+  mask_resize: [640, 480] 

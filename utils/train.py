@@ -1,17 +1,14 @@
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader
 from tqdm import tqdm
-from torchmetrics.classification import MulticlassAccuracy
-from kornia.losses import DiceLoss, FocalLoss
+from kornia.losses import DiceLoss
 from typing import Optional, Tuple
 import os
 import shutil
 import pickle
 
-from torchmetrics.classification import MulticlassAccuracy
 from kornia.losses import DiceLoss
-from typing import Optional, Tuple
+from typing import Optional
 
 
 def save_epoch_model(model, save_dir, epoch):
@@ -30,10 +27,10 @@ def save_epoch_model(model, save_dir, epoch):
 def save_final_model_and_metrics(
     model,
     save_dir,
-    train_total_loss,
+    train_dice_loss,
     train_reconstruction_loss,
     train_bce_loss,
-    val_total_loss,
+    val_dice_loss,
     val_reconstruction_loss,
     val_bce_loss,
     config_path,
@@ -131,7 +128,7 @@ def save_final_model_and_metrics(
 
     # ── Training metrics ───────────────────────────────────────────────────
     train_metrics = {
-        'total':          train_total_loss,
+        'dice':          train_dice_loss,
         'reconstruction': train_reconstruction_loss,
         'bce':            train_bce_loss,
     }
@@ -140,7 +137,7 @@ def save_final_model_and_metrics(
 
     # ── Validation metrics ─────────────────────────────────────────────────
     val_metrics = {
-        'total':          val_total_loss,
+        'dice':          val_dice_loss,
         'reconstruction': val_reconstruction_loss,
         'bce':            val_bce_loss,
     }
@@ -163,9 +160,12 @@ def train_shadenet(
     model: nn.Module,
     train_loader,
     val_loader,
+    save_dir: str = "./models",
+    config_path: str = "./",
     n_classes: int = 1,
     device: Optional[torch.device | str] = None,
     EPOCHS: int = 50,
+    warmup_epochs: int = 5,
     lr: float = 7e-5,
     ignore_index: int = 255,
     dice_w: float = 0.8,
@@ -173,6 +173,7 @@ def train_shadenet(
     mse_w: float = 1.0,
     cw: Optional[torch.Tensor] = None,
     accumulation_steps: int = 1,
+    
 ):
     """
     Train ShadeNet for a fixed number of epochs with gradient accumulation
@@ -273,6 +274,7 @@ def train_shadenet(
     train_diceloss, train_bceloss, train_mseloss = [], [], []
     val_diceloss,   val_bceloss,   val_mseloss   = [], [], []
 
+
     for epoch in range(EPOCHS):
 
         # ── Training ───────────────────────────────────────────────────────
@@ -293,10 +295,12 @@ def train_shadenet(
             with torch.cuda.amp.autocast(enabled=use_amp):
                 predicted_mask, reconstructed = model(img)
 
+                ramp = min(epoch / warmup_epochs, 1)
+                
                 lossdice = dice_criterion(predicted_mask, mask)
                 lossbce  = bceLoss_criterion(predicted_mask, mask)
                 lossmse  = mse_criterion(reconstructed, target)
-                loss     = (dice_w * lossdice + mask_w * lossbce + mse_w * lossmse) / accumulation_steps
+                loss     = (dice_w * lossdice * ramp + mask_w * lossbce * ramp + mse_w * lossmse) / accumulation_steps
 
             scaler.scale(loss).backward()
 
@@ -382,4 +386,19 @@ def train_shadenet(
               f"\n\t Val BCE Loss    : {avg_bce:.4f}"
               f"\n\t Val MSE Loss    : {avg_mse:.4f}")
 
-    return model, train_diceloss, train_bceloss, train_mseloss, val_diceloss, val_bceloss, val_mseloss
+
+        if epoch % 3 == 0:
+            save_epoch_model(model, save_dir, epoch)
+
+    save_final_model_and_metrics(model, 
+                                save_dir, 
+                                train_diceloss,
+                                train_mseloss,
+                                train_bceloss,
+                                val_diceloss,
+                                val_mseloss,
+                                val_bceloss,
+                                config_path,
+                        )
+
+    return model, train_diceloss, train_mseloss, train_bceloss, val_diceloss, val_mseloss, val_bceloss
