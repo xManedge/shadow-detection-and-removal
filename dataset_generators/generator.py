@@ -293,27 +293,23 @@ class Generator(Dataset):
 
         # ── Spatial transforms ─────────────────────────────────────────────
 
-        if random.random() > 0.5:
+        
+        if random.random() < 0.5:
             img           = TF.hflip(img)
             mask          = TF.hflip(mask)
             reconstructed = TF.hflip(reconstructed)
 
-        if random.random() > 0.5:
-            img           = TF.vflip(img)
-            mask          = TF.vflip(mask)
-            reconstructed = TF.vflip(reconstructed)
-
-        if random.random() > 0.5:
-            angle         = random.choice([90, 180, 270])
+        if random.random() < 0.5:
+            angle         = random.uniform(-10, 10)
             img           = TF.rotate(img,           angle)
             mask          = TF.rotate(mask,          angle)
             reconstructed = TF.rotate(reconstructed, angle)
 
-        if random.random() > 0.5:
+        if random.random() < 0.5:
             affine_params = T.RandomAffine.get_params(
                 degrees      = [0, 0],
-                translate    = (0.1, 0.1),
-                scale_ranges = (0.9, 1.1),
+                translate    = (0.05, 0.05),
+                scale_ranges = (0.95, 1.05),
                 shears       = [0, 0],
                 img_size     = img.size,
             )
@@ -321,18 +317,22 @@ class Generator(Dataset):
             mask          = TF.affine(mask,          *affine_params, interpolation=TF.InterpolationMode.NEAREST)
             reconstructed = TF.affine(reconstructed, *affine_params, interpolation=TF.InterpolationMode.BILINEAR)
 
-        # ── Photometric transforms (img + reconstructed only) ──────────────
+        # ── Photometric transforms (img + reconstructed only) ────────────────
 
-        if random.random() > 0.5:
-            jitter        = T.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.2, hue=0.05)
+        if random.random() < 0.5:
+            jitter        = T.ColorJitter(
+                brightness = 0.2,
+                contrast   = 0.2,
+                saturation = 0.1,
+                hue        = 0.02
+            )
             img           = jitter(img)
             reconstructed = jitter(reconstructed)
 
-        if random.random() > 0.3:
-            blur          = T.GaussianBlur(kernel_size=3, sigma=(0.1, 1.5))
+        if random.random() < 0.2:
+            blur          = T.GaussianBlur(kernel_size=3, sigma=(0.1, 0.5))
             img           = blur(img)
             reconstructed = blur(reconstructed)
-
         return img, mask, reconstructed
 
     def __getstats__(self):
