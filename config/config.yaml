@@ -5,9 +5,9 @@ model:
   n_classes: 1
 
 training:
-  epochs: 50
+  EPOCHS: 50
   warmup_epochs: 5
-  lr: 7e-5
+  lr: 0.00007
   ignore_index: 255
   dice_w: 0.3
   mask_w: 0.3
@@ -15,16 +15,16 @@ training:
   accumulation_steps: 2
   device: cuda
   save_dir: ./models
-  config_path: ./shadenet_config.yaml
-  class_weights_path: null        # set to path if using, e.g. ./cw.pt
-
+  
 traingenerator:
   root: ./Dataset/ISTD_Dataset/train
   augment: true
+  isTrain: true
 
 valgenerator:
   root: ./Dataset/ISTD_Dataset/test
-  augment:False
+  augment: false
+  isTrain: false
   
 dataloader:
   batch_size: 32

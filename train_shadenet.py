@@ -1,7 +1,7 @@
 import torch 
-from .models import ShadeNet
-from .utils import train_shadenet
-from .dataset_generators import Generator
+from models import ShadeNet
+from utils import train_shadenet
+from dataset_generators import Generator
 from torch.utils.data import DataLoader
 from torchvision import transforms as T
 import yaml
@@ -66,4 +66,3 @@ if __name__ == "__main__":
     torch.save(model_fp16.state_dict(), fp16_path)
     print(f"Saved fp16 inference model: {fp16_path}")
 
-    

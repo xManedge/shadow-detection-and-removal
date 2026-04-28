@@ -84,7 +84,7 @@ class Generator(Dataset):
     torch.Size([3, 256, 256])
     """
 
-    def __init__(self, root, augment, transform_img=None, transform_mask=None):
+    def __init__(self, root, augment, transform_img=None, transform_mask=None, isTrain = True):
         """
         Initialise the Generator dataset.
 
@@ -117,9 +117,15 @@ class Generator(Dataset):
         self.transform_mask = transform_mask
         self.augment = augment
 
-        self.dirA = os.path.join(root, 'train_A')
-        self.dirB = os.path.join(root, 'train_B')
-        self.dirC = os.path.join(root, 'train_C')
+        if isTrain:
+            self.dirA = os.path.join(root, 'train_A')
+            self.dirB = os.path.join(root, 'train_B')
+            self.dirC = os.path.join(root, 'train_C')
+        
+        else:
+            self.dirA = os.path.join(root, 'test_A')
+            self.dirB = os.path.join(root, 'test_B')
+            self.dirC = os.path.join(root, 'test_C')
 
         self.files = sorted(os.listdir(self.dirA))
 
