@@ -8,7 +8,6 @@ import shutil
 import pickle
 
 from kornia.losses import DiceLoss
-from typing import Optional
 
 
 def save_epoch_model(model, save_dir, epoch):
