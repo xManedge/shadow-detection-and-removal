@@ -1,0 +1,85 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+*.egg
+
+# virtual envs
+venv/
+.env/
+.env.*
+*.venv/
+
+# =========================
+# Jupyter / notebooks
+# =========================
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# =========================
+# Logs / outputs
+# =========================
+logs/
+log/
+*.log
+runs/
+wandb/
+mlruns/
+
+# =========================
+# Model weights / checkpoints
+# =========================
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+*.onnx
+
+# =========================
+# Images / datasets
+# =========================
+*.png
+*.jpg
+*.jpeg
+*.bmp
+*.tiff
+*.webp
+
+data/
+dataset/
+datasets/
+images/
+imgs/
+train_A/
+train_B/
+train_C/
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDEs
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# Config exceptions (KEEP THESE)
+# =========================
+!*.yaml
+!*.yml
+!*.json
+!*.cfg
+!*.ini
+!requirements.txt
+!README.md
+!*.py
