@@ -231,7 +231,7 @@ class Generator(Dataset):
             img           = to_tensor(img)
         
         if self.transform_target:
-            reconstructed = self.transform_img(reconstructed)
+            reconstructed = self.transform_target(reconstructed)
         
         else:
             reconstructed = to_tensor(reconstructed)
