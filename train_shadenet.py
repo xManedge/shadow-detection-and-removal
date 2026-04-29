@@ -41,6 +41,7 @@ if __name__ == "__main__":
     
     transform_target = T.Compose([
         T.Resize(t['img_resize']),
+        T.ToTensor(),
     ])
 
     traindataset = Generator(**cfg['traingenerator'], transform_img=transform_img, transform_mask=transform_mask, transform_target=transform_target)
