@@ -3,7 +3,7 @@ import torch.nn as nn
 from tqdm import tqdm
 from typing import Optional, Tuple
 import os
-from torchmetrics.image.lpips import LearnedPerceptualImagePatchSimilarity
+from torchmetrics.image import LearnedPerceptualImagePatchSimilarity
 import shutil
 import pickle
 

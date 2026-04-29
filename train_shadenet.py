@@ -39,9 +39,12 @@ if __name__ == "__main__":
         T.ToTensor(),
         ])
     
+    transform_target = T.Compose([
+        T.Resize(t['img_resize']),
+    ])
 
-    traindataset = Generator(**cfg['traingenerator'], transform_img=transform_img, transform_mask=transform_mask)
-    valdataset = Generator(**cfg['valgenerator'], transform_img=transform_img, transform_mask=transform_mask)
+    traindataset = Generator(**cfg['traingenerator'], transform_img=transform_img, transform_mask=transform_mask, transform_target=transform_target)
+    valdataset = Generator(**cfg['valgenerator'], transform_img=transform_img, transform_mask=transform_mask, transform_target=transform_target)
 
 
     trainLoader = DataLoader(traindataset, shuffle = True, **cfg['dataloader'])
