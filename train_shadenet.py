@@ -43,7 +43,6 @@ if __name__ == "__main__":
     traindataset = Generator(**cfg['traingenerator'], transform_img=transform_img, transform_mask=transform_mask)
     valdataset = Generator(**cfg['valgenerator'], transform_img=transform_img, transform_mask=transform_mask)
 
-    valdataset = torch.utils.data.Subset(valdataset, range(0, int(len(valdataset) * 0.1)))
 
     trainLoader = DataLoader(traindataset, shuffle = True, **cfg['dataloader'])
     valLoader = DataLoader(valdataset, shuffle = False, **cfg['dataloader'])

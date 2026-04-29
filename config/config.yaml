@@ -5,8 +5,8 @@ model:
   n_classes: 1
 
 training:
-  EPOCHS: 50
-  warmup_epochs: 5
+  EPOCHS: 100
+  warmup_epochs: 8
   lr: 0.00007
   ignore_index: 255
   dice_w: 0.3
