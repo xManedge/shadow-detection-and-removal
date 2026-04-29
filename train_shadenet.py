@@ -62,7 +62,7 @@ if __name__ == "__main__":
     model_fp16.load_state_dict(model.state_dict())
     model_fp16.half()   # convert weights to fp16
 
-    fp16_path = os.path.join(trn['save_dir'], 'shadenet_fp16.pt')
+    fp16_path = os.path.join(cfg['training']['save_dir'], 'shadenet_fp16.pt')
     torch.save(model_fp16.state_dict(), fp16_path)
     print(f"Saved fp16 inference model: {fp16_path}")
 

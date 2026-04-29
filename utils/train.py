@@ -1,13 +1,24 @@
 import torch
 import torch.nn as nn
 from tqdm import tqdm
-from kornia.losses import DiceLoss
 from typing import Optional, Tuple
 import os
 import shutil
 import pickle
 
 from kornia.losses import DiceLoss
+
+
+class BinaryDiceLoss(nn.Module):
+    def forward(self, pred, target):
+        # pred:   (B, 1, H, W) logits
+        # target: (B, H, W)    long
+        pred   = torch.sigmoid(pred).squeeze(1)   # (B, H, W) probs
+        target = target.float()
+        intersection = (pred * target).sum(dim=(1, 2))
+        dice = (2 * intersection + 1) / (pred.sum(dim=(1,2)) + target.sum(dim=(1,2)) + 1)
+        return 1 - dice.mean()
+
 
 
 def save_epoch_model(model, save_dir, epoch):
@@ -258,7 +269,7 @@ def train_shadenet(
     # ── Loss functions ─────────────────────────────────────────────────────
     cw = cw.to(device=device, dtype=torch.float32) if cw is not None else None
 
-    dice_criterion = DiceLoss(average='micro', ignore_index=ignore_index, weight=cw)
+    dice_criterion = BinaryDiceLoss()
     bceLoss_criterion = nn.BCEWithLogitsLoss(weight=cw)
     mse_criterion     = nn.MSELoss()
 

@@ -14,7 +14,7 @@ training:
   mse_w: 0.6
   accumulation_steps: 2
   device: cuda
-  save_dir: ./models
+  save_dir: ./checkpoints
   
 traingenerator:
   root: ./Dataset/ISTD_Dataset/train
