@@ -132,10 +132,6 @@ def save_final_model_and_metrics(
     # ── Model weights ──────────────────────────────────────────────────────
     torch.save(model.state_dict(), os.path.join(save_dir, MODEL_FILE))
 
-    # ── Model config ───────────────────────────────────────────────────────
-    with open(os.path.join(save_dir, CONFIG_FILE), 'wb') as f:
-        pickle.dump(model.config_file, f)
-
     # ── Training metrics ───────────────────────────────────────────────────
     train_metrics = {
         'dice':          train_dice_loss,
