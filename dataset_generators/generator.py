@@ -237,8 +237,7 @@ class Generator(Dataset):
             to_tensor = T.ToTensor()
             mask = to_tensor(mask)
 
-        mask = mask.long()
-
+        
         return img, mask, reconstructed
 
     def _augment(self, img, mask, reconstructed):

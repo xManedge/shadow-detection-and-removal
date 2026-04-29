@@ -9,14 +9,14 @@ import pickle
 from kornia.losses import DiceLoss
 
 
+
 class BinaryDiceLoss(nn.Module):
     def forward(self, pred, target):
-        # pred:   (B, 1, H, W) logits
-        # target: (B, H, W)    long
-        pred   = torch.sigmoid(pred).squeeze(1)   # (B, H, W) probs
-        target = target.float()
-        intersection = (pred * target).sum(dim=(1, 2))
-        dice = (2 * intersection + 1) / (pred.sum(dim=(1,2)) + target.sum(dim=(1,2)) + 1)
+        pred   = torch.sigmoid(pred).squeeze(1).float()   # (B, H, W)
+        target = target.squeeze(1).float()                 # (B, H, W)
+        
+        intersection = (pred * target).sum(dim=(-2, -1))
+        dice = (2 * intersection + 1) / (pred.sum(dim=(-2, -1)) + target.sum(dim=(-2, -1)) + 1)
         return 1 - dice.mean()
 
 
@@ -300,7 +300,6 @@ def train_shadenet(
         for batch_idx, data in enumerate(train_loader_tqdm):
             img    = data["Image"].to(device=device,  non_blocking=True)
             mask   = data["Mask"].to(device=device,   non_blocking=True)
-            mask = mask.squeeze(1)
             target = data["Target"].to(device=device, non_blocking=True)
 
             with torch.cuda.amp.autocast(enabled=use_amp):
