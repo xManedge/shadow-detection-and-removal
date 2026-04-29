@@ -11,6 +11,7 @@ training:
   ignore_index: 255
   dice_w: 0.3
   mask_w: 0.3
+  perceptual_w: 0.2
   mse_w: 0.6
   accumulation_steps: 2
   device: cuda
