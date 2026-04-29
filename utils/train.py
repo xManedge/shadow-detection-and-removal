@@ -361,7 +361,7 @@ def train_shadenet(
         dice_loss_run   = torch.tensor(0.0, device=device)
         bceloss_running = torch.tensor(0.0, device=device)
         mseloss_running = torch.tensor(0.0, device=device)
-        perceptual_running = torch.tensor(0.0)
+        perceptual_running = torch.tensor(0.0, device = device)
 
         val_loader_tqdm = tqdm(val_loader, desc=f"Epoch {epoch+1}/{EPOCHS} [Val]")
 
