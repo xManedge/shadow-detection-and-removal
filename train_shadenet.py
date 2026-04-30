@@ -54,8 +54,8 @@ if __name__ == "__main__":
 
     model = ShadeNet(**cfg["model"])
 
-    model, train_diceloss, train_bceloss, train_mseloss, \
-    val_diceloss,   val_bceloss,   val_mseloss = train_shadenet(model=model, train_loader=trainLoader, val_loader=valLoader, config_path=PATH, **cfg['training'])
+    model, train_diceloss, train_bceloss, train_mseloss, train_perceptualloss, \
+    val_diceloss,   val_bceloss,   val_mseloss, val_perceptualloss = train_shadenet(model=model, train_loader=trainLoader, val_loader=valLoader, config_path=PATH, **cfg['training'])
 
     model = model.half()
     
