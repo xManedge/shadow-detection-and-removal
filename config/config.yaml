@@ -39,3 +39,9 @@ transforms:
   img_std: [0.229, 0.224, 0.225]
   img_resize: [640, 480]
   mask_resize: [640, 480] 
+
+inference: 
+  model_half_path: ./checkpoints/shadenet_fp16.pt
+  model_path: ./checkpoints/shadenet.pt
+  save_dir: ./output
+  useHalf: true
