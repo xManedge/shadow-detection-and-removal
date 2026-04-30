@@ -61,8 +61,8 @@ testLoader_tqdm = tqdm(testLoader, total=len(testLoader))
 
 # testing 
 os.makedirs(cfg['inference']['save_dir'], exist_ok=True)
-for batch_idx, (img, _, _) in enumerate(testLoader_tqdm):
-    img = img.cuda()
+for batch_idx, data in enumerate(testLoader_tqdm):
+    img = data['Image'].cuda()
     if cfg['inference']['useHalf']: 
         img = img.half()
     with torch.no_grad(), context:
@@ -72,6 +72,13 @@ for batch_idx, (img, _, _) in enumerate(testLoader_tqdm):
     for i in range(img.shape[0]):
         sample_idx = batch_idx * dataloader_config['batch_size'] + i
 
+        # save input image
+        input_np = img[i].cpu().float()
+        input_np = input_np * torch.tensor(t['img_std']).view(3,1,1) + torch.tensor(t['img_mean']).view(3,1,1)  # unnormalize
+        input_np = (input_np.clamp(0,1).permute(1,2,0).numpy() * 255).astype(np.uint8)
+        Image.fromarray(input_np, mode='RGB').save(os.path.join(cfg['inference']['save_dir'], f'{sample_idx}_input.png'))
+        
+        
         # save mask
         mask_np = mask[i].squeeze(0).cpu().float().clamp(0, 1)
         mask_np = (mask_np.numpy() * 255).astype(np.uint8)
