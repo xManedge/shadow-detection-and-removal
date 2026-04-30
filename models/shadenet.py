@@ -129,7 +129,10 @@ class ShadeNet(nn.Module):
         # (B, 256, 160, 120) → (B, 512,  80,  60)
         self.encoder4 = Down(mid_layers[2], mid_layers[3])
         # (B, 512,  80,  60) → (B, 512,  40,  30)
-        self.bottleneck = Down(mid_layers[3], mid_layers[4])
+        self.bottleneck = nn.Sequential(
+            Down(mid_layers[3], mid_layers[4]),
+            nn.Dropout2d(p = 0.3)
+        )
 
         # ── Decoder level 4 (bottleneck → encoder4 resolution) ────────────
         # Decoder_Up : (B, 512, 40, 30) → (B, 512, 80, 60)

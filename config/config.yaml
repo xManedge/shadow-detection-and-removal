@@ -9,10 +9,10 @@ training:
   warmup_epochs: 8
   lr: 0.00007
   ignore_index: 255
-  dice_w: 0.3
-  mask_w: 0.3
+  dice_w: 0.5
+  mask_w: 0.5
   perceptual_w: 0.2
-  mse_w: 0.6
+  mse_w: 0.5
   accumulation_steps: 2
   device: cuda
   save_dir: ./checkpoints
@@ -28,7 +28,7 @@ valgenerator:
   isTrain: false
   
 dataloader:
-  batch_size: 32
+  batch_size: 24
   num_workers: 4
   pin_memory: true
   persistent_workers: true
