@@ -84,7 +84,7 @@ class Generator(Dataset):
     torch.Size([3, 256, 256])
     """
 
-    def __init__(self, root, augment, transform_img=None, transform_mask=None, isTrain = True):
+    def __init__(self, root, augment, transform_img=None, transform_mask=None, transform_target = None, isTrain = True):
         """
         Initialise the Generator dataset.
 
@@ -115,6 +115,7 @@ class Generator(Dataset):
         self.root = root
         self.transform_img = transform_img
         self.transform_mask = transform_mask
+        self.transform_target = transform_target
         self.augment = augment
 
         if isTrain:
@@ -222,19 +223,23 @@ class Generator(Dataset):
         - ``T.ToTensor()`` scales ``uint8`` pixel values from [0, 255] to
           [0.0, 1.0] automatically.
         """
+        to_tensor     = T.ToTensor()
         if self.transform_img:
             img           = self.transform_img(img)
-            reconstructed = self.transform_img(reconstructed)
+        
         else:
-            to_tensor     = T.ToTensor()
             img           = to_tensor(img)
+        
+        if self.transform_target:
+            reconstructed = self.transform_target(reconstructed)
+        
+        else:
             reconstructed = to_tensor(reconstructed)
 
         if self.transform_mask:
             mask = self.transform_mask(mask)
         
         else:
-            to_tensor = T.ToTensor()
             mask = to_tensor(mask)
 
         

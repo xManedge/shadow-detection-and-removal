@@ -39,9 +39,13 @@ if __name__ == "__main__":
         T.ToTensor(),
         ])
     
+    transform_target = T.Compose([
+        T.Resize(t['img_resize']),
+        T.ToTensor(),
+    ])
 
-    traindataset = Generator(**cfg['traingenerator'], transform_img=transform_img, transform_mask=transform_mask)
-    valdataset = Generator(**cfg['valgenerator'], transform_img=transform_img, transform_mask=transform_mask)
+    traindataset = Generator(**cfg['traingenerator'], transform_img=transform_img, transform_mask=transform_mask, transform_target=transform_target)
+    valdataset = Generator(**cfg['valgenerator'], transform_img=transform_img, transform_mask=transform_mask, transform_target=transform_target)
 
 
     trainLoader = DataLoader(traindataset, shuffle = True, **cfg['dataloader'])
@@ -50,8 +54,8 @@ if __name__ == "__main__":
 
     model = ShadeNet(**cfg["model"])
 
-    model, train_diceloss, train_bceloss, train_mseloss, \
-    val_diceloss,   val_bceloss,   val_mseloss = train_shadenet(model=model, train_loader=trainLoader, val_loader=valLoader, config_path=PATH, **cfg['training'])
+    model, train_diceloss, train_bceloss, train_mseloss, train_perceptualloss, \
+    val_diceloss,   val_bceloss,   val_mseloss, val_perceptualloss = train_shadenet(model=model, train_loader=trainLoader, val_loader=valLoader, config_path=PATH, **cfg['training'])
 
     model = model.half()
     
